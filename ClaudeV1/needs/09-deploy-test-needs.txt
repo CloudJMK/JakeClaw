@@ -1,0 +1,22 @@
+TASK: 09 — deploy-test.sh
+STATUS: COMPLETE — no user input needed (read-only smoke tests)
+
+NOTES:
+- Run as jake user (not root) on the deployed VM
+- Script is read-only; will never modify system state
+- Uses sudo -n (no password prompt); jake sudoers must allow NOPASSWD
+- All checks are gracefully skipped if optional components not installed
+- Exit code 0 = all PASS; exit code 1 = at least one FAIL
+
+OPTIONAL:
+- Run specific suite: bash deploy-test.sh --suite versions
+- Run with extra output: bash deploy-test.sh --verbose
+
+WHAT IT CHECKS:
+[user]    — jake user exists, home dir, sudo access, repo present
+[mounts]  — /Jake-data mounted and writable
+[versions]— git, node, python, rust, claw, code-server, openclaw versions
+[services]— claw-code, jake-api, code-server, self-improve timer
+[api]     — HTTP GET /v1/models and code-server port 8080
+[continue]— ~/.continue/config.yaml present and symlinked
+[timer]   — jake-self-improve.timer active, log file exists

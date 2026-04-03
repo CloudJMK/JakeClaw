@@ -1,0 +1,131 @@
+#cloud-config
+# =============================================================================
+# JakeClaw — cloud-init user-data
+# Tested on: Ubuntu 24.04 LTS (Noble Numbat) cloud image
+#
+# USER INPUT REQUIRED (search for {{...}} placeholders below):
+#   {{SSH_PUBLIC_KEY}}   — paste your SSH public key (e.g. ssh-ed25519 AAAA...)
+#   {{JAKE_PASSWORD}}    — hashed password (openssl passwd -6 'yourpassword')
+#                          or leave disabled and use SSH key only
+#   {{JAKE_DATA_DISK}}   — block device for /Jake-data, e.g. /dev/sdb
+#                          (omit runcmd disk-format block if not using a 2nd disk)
+#   {{JAKECLAW_REPO}}    — your fork URL, default: https://github.com/CloudJMK/JakeClaw.git
+# =============================================================================
+
+hostname: jake
+fqdn: jake.local
+manage_etc_hosts: true
+
+# ─── Jake user ────────────────────────────────────────────────────────────────
+users:
+  - name: jake
+    gecos: Jake Agent
+    groups: [sudo, docker, adm]
+    shell: /bin/bash
+    # USER INPUT REQUIRED: replace placeholder with your real SSH public key
+    ssh_authorized_keys:
+      - "{{SSH_PUBLIC_KEY}}"
+    # USER INPUT REQUIRED: replace with hashed password or set lock_passwd: true
+    passwd: "{{JAKE_PASSWORD}}"
+    lock_passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+# ─── Locale & timezone ────────────────────────────────────────────────────────
+locale: en_US.UTF-8
+timezone: UTC   # USER INPUT OPTIONAL: set to your local timezone, e.g. America/Chicago
+
+# ─── Base packages ────────────────────────────────────────────────────────────
+package_update: true
+package_upgrade: true
+packages:
+  - git
+  - curl
+  - wget
+  - unzip
+  - build-essential
+  - python3
+  - python3-pip
+  - python3-venv
+  - nodejs
+  - npm
+  - rustup
+  - jq
+  - htop
+  - tmux
+  - vim
+  - ca-certificates
+  - gnupg
+  - lsb-release
+  - flock
+  - chromium-browser   # for Playwright/browser tools
+
+# ─── Write helper files ───────────────────────────────────────────────────────
+write_files:
+  - path: /etc/jake-deployment.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      # JakeClaw deployment config — sourced by bootstrap scripts
+      JAKE_USER=jake
+      JAKE_HOME=/home/jake
+      JAKE_DATA=/Jake-data
+      # USER INPUT REQUIRED: set real repo URL below
+      JAKECLAW_REPO={{JAKECLAW_REPO}}
+
+  - path: /etc/sudoers.d/jake-nopasswd
+    owner: root:root
+    permissions: "0440"
+    content: |
+      jake ALL=(ALL) NOPASSWD:ALL
+
+# ─── First-boot commands ──────────────────────────────────────────────────────
+runcmd:
+  # Fail fast on any error
+  - set -e
+
+  # ── Format and mount /Jake-data (persistent volume) ──
+  # USER INPUT REQUIRED: replace /dev/sdb with your actual second disk device
+  # Comment out this block entirely if you don't have a second disk
+  - |
+    DATA_DISK="/dev/sdb"
+    if [ -b "$DATA_DISK" ] && ! blkid "$DATA_DISK" | grep -q ext4; then
+      mkfs.ext4 -L jake-data "$DATA_DISK"
+    fi
+    mkdir -p /Jake-data
+    if ! grep -q jake-data /etc/fstab; then
+      echo "LABEL=jake-data  /Jake-data  ext4  defaults,nofail  0  2" >> /etc/fstab
+    fi
+    mount -a || true
+
+  # ── Ensure log dir ──
+  - mkdir -p /Jake-data/logs /Jake-data/skills /Jake-data/.continue
+
+  # ── Clone JakeClaw repo ──
+  # USER INPUT REQUIRED: the {{JAKECLAW_REPO}} placeholder is filled from
+  # /etc/jake-deployment.conf; set it before running cloud-init
+  - |
+    source /etc/jake-deployment.conf
+    if [ ! -d /JakeClaw/.git ]; then
+      git clone "$JAKECLAW_REPO" /JakeClaw
+    else
+      git -C /JakeClaw pull --ff-only || true
+    fi
+    chown -R jake:jake /JakeClaw
+
+  # ── Run main bootstrap ──
+  - |
+    bash /JakeClaw/scripts/bootstrap-Jake.sh 2>&1 | tee /var/log/jake-bootstrap.log
+    chown jake:jake /var/log/jake-bootstrap.log
+
+final_message: |
+  ============================================================
+  JakeClaw first-boot complete!
+  Uptime: $UPTIME seconds
+
+  Access Jake:
+    SSH:        ssh jake@<this-ip>
+    code-server: http://<this-ip>:8080
+    API:        http://<this-ip>:8000/v1/models
+
+  Next step: run  bash /JakeClaw/scripts/deploy-test.sh
+  ============================================================

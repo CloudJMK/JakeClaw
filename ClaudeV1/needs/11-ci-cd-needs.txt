@@ -1,0 +1,22 @@
+TASK: 11 — GitHub Actions CI/CD
+STATUS: COMPLETE — activates automatically on push to GitHub
+
+NO USER INPUT REQUIRED to activate CI (just push to GitHub repo).
+
+JOBS:
+- validate-scripts  — shellcheck, set -e guards, root guards on install scripts
+- validate-configs  — JSON/YAML parse validation, secret placeholder checks
+- validate-docs     — markdownlint, required docs existence, README structure
+- validate-skills   — SKILL.md frontmatter YAML validity
+- security-scan     — gitleaks secret detection on all repo files
+
+NOTES:
+- CI never deploys — validation only
+- gitleaks will block commits containing API keys or tokens
+- SSH public key placeholder check prevents accidental key exposure
+- .env file is gitignored; CI never sees secrets
+- markdownlint failures are non-fatal (warnings only)
+
+OPTIONAL:
+- Add branch protection rules in GitHub to require CI pass before merge
+- Add Dependabot for GitHub Actions version updates

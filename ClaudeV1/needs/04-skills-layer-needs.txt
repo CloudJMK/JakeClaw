@@ -1,0 +1,15 @@
+TASK: 04 — OpenClaw skills layer
+STATUS: COMPLETE — no blocking user input needed
+
+NOTES:
+- claw_harness SKILL.md references /usr/local/bin/claw
+  This is a placeholder binary until real claw-code is built (Task 03)
+  Once built, skill works fully
+
+- self_improvement SKILL.md references scripts that are deployed in Task 03 and Task 07
+
+- Dynamic skills in skills/claw-tools-dynamic/ are generated at runtime
+  by expose-claw-tools.sh (Task 08) — directory is gitignored
+
+NO USER INPUT REQUIRED for this task.
+Skills work with placeholder binary; full functionality once claw-code is built.

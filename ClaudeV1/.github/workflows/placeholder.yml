@@ -1,0 +1,8 @@
+# Placeholder workflow — real validation CI is in validate-repo.yml (Task 11)
+name: placeholder
+on: [push]
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Placeholder — see validate-repo.yml"

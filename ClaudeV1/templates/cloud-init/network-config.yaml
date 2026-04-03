@@ -1,0 +1,34 @@
+version: 2
+# =============================================================================
+# JakeClaw — cloud-init network configuration
+#
+# Default: DHCP on first ethernet interface (ens3 / eth0 — cloud-init
+# auto-discovers the right name).
+#
+# USER INPUT OPTIONAL:
+#   Uncomment and fill the "static" section below to assign a fixed IP instead.
+# =============================================================================
+
+ethernets:
+  # ── DHCP (default — works out of the box) ────────────────────────────────
+  ens3:
+    dhcp4: true
+    dhcp6: false
+    # Optional: set a hostname-derived DNS search domain
+    # nameservers:
+    #   search: [local]
+    #   addresses: [1.1.1.1, 8.8.8.8]
+
+  # ── Static IP example (comment out the DHCP block above and uncomment this)
+  # USER INPUT REQUIRED if using static:
+  #   {{STATIC_IP}}      — e.g. 192.168.1.50/24
+  #   {{GATEWAY_IP}}     — e.g. 192.168.1.1
+  #   {{DNS_SERVERS}}    — e.g. [1.1.1.1, 8.8.8.8]
+  #
+  # ens3:
+  #   dhcp4: false
+  #   addresses:
+  #     - "{{STATIC_IP}}"
+  #   gateway4: "{{GATEWAY_IP}}"
+  #   nameservers:
+  #     addresses: {{DNS_SERVERS}}

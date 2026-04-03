@@ -1,0 +1,18 @@
+TASK: 07 — Self-improvement systemd timer
+STATUS: COMPLETE — runs on the deployed VM (no user input needed for setup)
+
+OPTIONAL USER INPUT:
+1. Timer schedule — default fires at 02:00, 08:00, 14:00, 20:00 UTC
+   Customize: set JAKE_IMPROVE_SCHEDULE in config/.env before running
+   setup-self-improvement.sh
+   Example: JAKE_IMPROVE_SCHEDULE="*-*-* 03:00:00"  (once daily)
+
+2. The worker script (/usr/local/bin/jake-self-improve.sh) is written
+   to the VM by setup-self-improvement.sh — edit that file if you want
+   to customize worker behavior
+
+NOTES:
+- git pull uses --ff-only: local uncommitted changes block the pull (by design)
+- claw rebuild is skipped if source hash unchanged (efficient)
+- Rollback to claw.bak is automatic on build failure
+- flock prevents concurrent runs

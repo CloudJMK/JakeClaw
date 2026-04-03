@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.anthropic.com/claude-code/settings/v1",
+  "_comment": "JakeClaw OpenClaw (Claude Code) configuration. Deployed to ~/.claude/settings.json on first boot.",
+
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/JakeClaw/skills",
+        "/Jake-data/skills"
+      ]
+    }
+  },
+
+  "model": "claude-sonnet-4-6",
+
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebSearch(*)",
+      "WebFetch(*)",
+      "TodoWrite(*)",
+      "Agent(*)"
+    ],
+    "deny": []
+  },
+
+  "env": {
+    "JAKE_DATA": "/Jake-data",
+    "JAKECLAW_DIR": "/JakeClaw"
+  },
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /JakeClaw/scripts/hooks/pre-bash-safety.sh"
+          }
+        ]
+      }
+    ]
+  },
+
+  "systemPrompt": {
+    "file": "/JakeClaw/config/Jake-identity.md"
+  },
+
+  "maxTokens": 8192,
+  "temperature": 0.7,
+
+  "autoApprove": {
+    "read": true,
+    "write": false,
+    "bash": false,
+    "destructive": false
+  },
+
+  "_note_api_key": "USER INPUT REQUIRED: ANTHROPIC_API_KEY must be set as an environment variable (see config/.env.example). Do NOT put the key in this file."
+}

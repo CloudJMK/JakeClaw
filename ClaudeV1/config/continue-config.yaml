@@ -1,0 +1,94 @@
+name: JakeClaw Default Config
+version: 1.0.0
+schema: v1
+# =============================================================================
+# JakeClaw Continue.dev configuration
+# Deployed to ~/.continue/config.yaml (symlinked to /Jake-data/.continue/)
+#
+# USER INPUT REQUIRED:
+#   The apiBase below points to the LiteLLM proxy at localhost:8000.
+#   This works out of the box after setup-jake-api.sh runs.
+#   If routing to Anthropic directly, change apiBase and set apiKey from .env.
+# =============================================================================
+
+models:
+  - name: jake
+    title: Jake (via Claw-code + LiteLLM)
+    provider: openai
+    model: jake-claw
+    # Routes to LiteLLM proxy which routes to claw-code or Anthropic
+    # USER INPUT: if not using LiteLLM locally, change to your endpoint
+    apiBase: http://localhost:8000/v1
+    # LiteLLM internal master key — not a secret on a private VM
+    apiKey: jake-proxy-internal
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      temperature: 0.7
+      maxTokens: 8192
+
+  # Autocomplete model (same backend, lower temperature)
+  - name: jake-autocomplete
+    title: Jake Autocomplete
+    provider: openai
+    model: jake-autocomplete
+    apiBase: http://localhost:8000/v1
+    apiKey: jake-proxy-internal
+    roles:
+      - autocomplete
+    defaultCompletionOptions:
+      temperature: 0.2
+      maxTokens: 512
+
+  # Optional: Ollama local fallback (install Ollama separately)
+  # USER INPUT OPTIONAL: uncomment if you add Ollama to your Jake VM
+  # - name: ollama-local
+  #   title: Local Fallback (Ollama)
+  #   provider: ollama
+  #   model: AUTODETECT
+  #   roles:
+  #     - chat
+
+# ─── Jake identity / system prompt ───────────────────────────────────────────
+# This is a brief inline version; the full identity is in Jake-identity.md
+systemMessage: |
+  You are Jake, a trusted personal agent and human-like collaborator.
+  You are helpful, truthful, and safety-conscious.
+  You survey the codebase before making large changes.
+  You plan before acting, and always ask for confirmation before destructive operations.
+  You use the Claw-code harness for complex orchestration and self-improvement.
+  You have full shell and tool access inside this environment.
+  Your goal: positive, meaningful, user-directed outcomes.
+
+# ─── Context providers ────────────────────────────────────────────────────────
+context:
+  - provider: codebase
+  - provider: terminal
+  - provider: problems
+  - provider: diff
+  - provider: docs
+    params:
+      urls:
+        - https://docs.anthropic.com
+
+# ─── Behavior rules ──────────────────────────────────────────────────────────
+rules:
+  - Always run 'survey the codebase' before large refactors or architecture changes.
+  - Use confirmation gates for rm, git reset --hard, or any system-wide changes.
+  - Prefer claw_harness skill over raw shell commands for complex orchestration.
+  - Log important actions to /Jake-data/logs/.
+
+# ─── Tab autocomplete ─────────────────────────────────────────────────────────
+tabAutocompleteModel:
+  name: jake-autocomplete
+  provider: openai
+  model: jake-autocomplete
+  apiBase: http://localhost:8000/v1
+  apiKey: jake-proxy-internal
+
+# ─── Privacy ──────────────────────────────────────────────────────────────────
+allowAnonymousTelemetry: false

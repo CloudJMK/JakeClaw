@@ -1,0 +1,21 @@
+TASK: 03 — Bootstrap and install scripts
+STATUS: COMPLETE — REQUIRES user input for connections/auth
+
+REQUIRED USER INPUT:
+1. ANTHROPIC_API_KEY — needed for install-openclaw.sh to authenticate
+   Set in: config/.env  (copy from config/.env.example)
+   Note: install will proceed without it but OpenClaw won't authenticate
+
+2. claw-code source — install-claw-code.sh clones ultraworkers/claw-code-parity
+   If repo is private or you have a fork, update CLAW_CODE_REPO in config/.env
+   Note: if repo is unavailable, a placeholder binary is installed and
+         clearly marked in-code; all other bootstrap steps continue
+
+3. JAKE_API_BACKEND — in config/.env, choose routing:
+   - claw-local (default): routes LiteLLM to local claw-code Axum server
+   - anthropic: routes direct to Anthropic API (needs ANTHROPIC_API_KEY)
+   - openai: routes to OpenAI-compatible API (needs OPENAI_API_KEY)
+
+OPTIONAL:
+4. CODE_SERVER_PASSWORD — set in config/.env to enable code-server auth
+   Leave blank for no-auth (fine on private home network per threat model)

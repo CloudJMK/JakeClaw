@@ -1,0 +1,7 @@
+TASK: 01 — Initialize JakeClaw repo structure
+STATUS: COMPLETE (no blocking user input needed)
+
+OPTIONAL USER INPUT:
+- Choose license: currently AGPLv3. Change to MIT if preferred.
+- Update CODEOWNERS GitHub username if not @CloudJMK.
+- Set JAKECLAW_REPO in config/.env to your fork URL.

@@ -1,0 +1,17 @@
+TASK: 08 — expose-claw-tools.sh
+STATUS: COMPLETE — requires claw binary and running claw-code service
+
+REQUIRED ON VM:
+1. /usr/local/bin/claw must be installed (placeholder OK, real binary preferred)
+   If placeholder: script will find empty manifest and generate 0 skills
+   If real binary: generates SKILL.md per discovered tool
+
+2. OpenClaw reload endpoint (OPENCLAW_RELOAD_URL) — defaults to
+   http://localhost:9000/api/skills/reload
+   USER INPUT: adjust this URL if your OpenClaw version uses a different endpoint
+   If endpoint unavailable, skills are generated but reload is manual
+
+NOTES:
+- Script is safe to re-run: clears old dynamic skills before regenerating
+- Skills land in skills/claw-tools-dynamic/ (gitignored)
+- JSON and plain-text manifest formats both handled

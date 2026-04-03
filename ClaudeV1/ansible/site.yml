@@ -1,0 +1,48 @@
+---
+# JakeClaw Ansible playbook — optional post-deploy configuration
+# Run: ansible-playbook -i <inventory> ansible/site.yml
+#
+# USER INPUT REQUIRED:
+#   - Create ansible/inventory/ with your host(s)
+#   - Set ansible_user=jake and ansible_ssh_private_key_file
+
+- name: Configure JakeClaw VM
+  hosts: jake_vms
+  become: true
+  vars:
+    jake_user: jake
+    jake_home: /home/jake
+    jake_data: /Jake-data
+    # USER INPUT REQUIRED: set these in group_vars or vault
+    # openclaw_api_key: "{{ vault_openclaw_api_key }}"
+    # anthropic_api_key: "{{ vault_anthropic_api_key }}"
+
+  tasks:
+    - name: Ensure JakeClaw repo is present
+      git:
+        repo: https://github.com/CloudJMK/JakeClaw.git
+        dest: /JakeClaw
+        version: main
+        force: false   # never force-reset; preserve local changes
+
+    - name: Ensure Jake-data volume is mounted
+      file:
+        path: "{{ jake_data }}"
+        state: directory
+        owner: "{{ jake_user }}"
+        mode: "0750"
+
+    - name: Run bootstrap script if not already bootstrapped
+      stat:
+        path: /var/log/jake-bootstrap.log
+      register: bootstrap_log
+
+    - name: Execute bootstrap
+      command: bash /JakeClaw/scripts/bootstrap-Jake.sh
+      when: not bootstrap_log.stat.exists
+
+    - name: Ensure self-improvement timer is enabled
+      systemd:
+        name: jake-self-improve.timer
+        state: started
+        enabled: true

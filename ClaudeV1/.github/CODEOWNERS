@@ -1,0 +1,14 @@
+# JakeClaw CODEOWNERS
+# Format: <pattern> <owner>
+# Owners are notified when matching files change in PRs.
+
+# Default owner for all files
+*                   @CloudJMK
+
+# Core scripts — require owner review
+scripts/            @CloudJMK
+templates/          @CloudJMK
+config/             @CloudJMK
+
+# CI/CD workflows
+.github/workflows/  @CloudJMK

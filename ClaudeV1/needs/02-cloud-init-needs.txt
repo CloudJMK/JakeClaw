@@ -1,0 +1,21 @@
+TASK: 02 — Cloud-init templates
+STATUS: COMPLETE — REQUIRES user input before deploying
+
+REQUIRED USER INPUT:
+1. SSH_PUBLIC_KEY — replace {{SSH_PUBLIC_KEY}} in templates/cloud-init/user-data.yaml
+   Command: cat ~/.ssh/id_ed25519.pub
+   Then: sed -i "s|{{SSH_PUBLIC_KEY}}|YOUR_KEY_HERE|g" templates/cloud-init/user-data.yaml
+
+2. JAKE_PASSWORD — replace {{JAKE_PASSWORD}} with a hashed password
+   Command: openssl passwd -6 'your-strong-password'
+   Or set lock_passwd: true and use SSH key only (recommended)
+
+3. JAKECLAW_REPO — replace {{JAKECLAW_REPO}} with your repo URL
+   Default: https://github.com/CloudJMK/JakeClaw.git
+
+OPTIONAL:
+4. Static IP — uncomment static section in network-config.yaml and fill in
+   {{STATIC_IP}}, {{GATEWAY_IP}}, {{DNS_SERVERS}}
+
+5. Second disk — if NOT attaching a second disk for /Jake-data, comment out
+   the disk-format block in user-data.yaml runcmd section

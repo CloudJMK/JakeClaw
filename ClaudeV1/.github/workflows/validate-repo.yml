@@ -1,0 +1,231 @@
+name: Validate JakeClaw Repo
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, jake-gptv1-draft]
+
+# CI only validates — never deploys.
+# Deploys are manual via create-Jake-vm.sh on the Proxmox host.
+
+jobs:
+
+  # ──────────────────────────────────────────────────────────────────────────
+  validate-scripts:
+    name: Validate Shell Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck on all shell scripts
+        run: |
+          find . -name "*.sh" -not -path "*/claw-code/*" -not -path "*/.git/*" \
+            -print0 | xargs -0 shellcheck \
+              --severity=warning \
+              --external-sources \
+              --shell=bash \
+              --exclude=SC1091  # ignore 'source .env' warnings
+
+      - name: Check scripts have set -e / set -euo pipefail
+        run: |
+          MISSING=()
+          while IFS= read -r -d '' script; do
+            if ! grep -qE '^set -' "$script"; then
+              MISSING+=("$script")
+            fi
+          done < <(find scripts/ -name "*.sh" -print0 2>/dev/null)
+          if [[ ${#MISSING[@]} -gt 0 ]]; then
+            echo "Scripts missing 'set -e' / 'set -euo pipefail':"
+            printf '  %s\n' "${MISSING[@]}"
+            exit 1
+          fi
+          echo "All scripts have set -e guard"
+
+      - name: Check scripts have root guard (EUID check)
+        run: |
+          # install-*.sh and setup-*.sh must assert root
+          MISSING=()
+          while IFS= read -r script; do
+            if ! grep -qE 'EUID|must run as root' "$script"; then
+              MISSING+=("$script")
+            fi
+          done < <(find scripts/ -name "install-*.sh" -o -name "setup-*.sh" 2>/dev/null)
+          if [[ ${#MISSING[@]} -gt 0 ]]; then
+            echo "Scripts missing root guard:"
+            printf '  %s\n' "${MISSING[@]}"
+            exit 1
+          fi
+          echo "All install/setup scripts have root guard"
+
+  # ──────────────────────────────────────────────────────────────────────────
+  validate-configs:
+    name: Validate Config Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yamllint and jq
+        run: sudo apt-get install -y yamllint jq python3
+
+      - name: Validate JSON configs
+        run: |
+          for f in config/*.json; do
+            echo "Checking: $f"
+            python3 -m json.tool "$f" > /dev/null && echo "  OK" || { echo "  FAIL"; exit 1; }
+          done
+
+      - name: Validate YAML configs (config/)
+        run: |
+          yamllint -d relaxed config/*.yaml || true
+          # Python parse as authoritative check
+          for f in config/*.yaml; do
+            echo "Checking: $f"
+            python3 -c "import yaml,sys; yaml.safe_load(open('$f'))" && echo "  OK" || { echo "  FAIL"; exit 1; }
+          done
+
+      - name: Validate cloud-init YAML
+        run: |
+          for f in templates/cloud-init/*.yaml; do
+            echo "Checking: $f"
+            python3 -c "import yaml,sys; yaml.safe_load(open('$f'))" && echo "  OK" || { echo "  FAIL"; exit 1; }
+          done
+
+      - name: Check cloud-init has SSH key placeholder (not a real key)
+        run: |
+          if grep -qE 'ssh-(rsa|ed25519) AAAA[A-Za-z0-9+/]{20,}' \
+               templates/cloud-init/user-data.yaml 2>/dev/null; then
+            echo "ERROR: Real SSH public key found in user-data.yaml — use {{SSH_PUBLIC_KEY}} placeholder"
+            exit 1
+          fi
+          echo "SSH key placeholder check passed"
+
+      - name: Verify no secrets in .env.example (no real keys)
+        run: |
+          if grep -qE '(AKIA|sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36,})' \
+               config/.env.example 2>/dev/null; then
+            echo "ERROR: Looks like a real API key is in .env.example"
+            exit 1
+          fi
+          echo ".env.example secrets check passed"
+
+  # ──────────────────────────────────────────────────────────────────────────
+  validate-docs:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Lint markdown files
+        run: |
+          markdownlint \
+            --disable MD013 MD033 MD041 \
+            docs/*.md README.md || true
+          # Non-fatal — treat as warning only
+
+      - name: Check required docs exist
+        run: |
+          REQUIRED=(
+            docs/deployment-guide.md
+            docs/claw-code-integration.md
+            docs/self-improvement.md
+            README.md
+          )
+          for f in "${REQUIRED[@]}"; do
+            [[ -f "$f" ]] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Check README has Quick Start section
+        run: |
+          grep -q "Quick Start" README.md || {
+            echo "README.md missing Quick Start section"
+            exit 1
+          }
+          echo "README Quick Start section found"
+
+  # ──────────────────────────────────────────────────────────────────────────
+  validate-skills:
+    name: Validate OpenClaw Skills
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          python3 << 'PYEOF'
+          import os, sys
+          import yaml
+
+          skill_dirs = []
+          for root, dirs, files in os.walk('skills'):
+              for f in files:
+                  if f == 'SKILL.md':
+                      skill_dirs.append(os.path.join(root, f))
+
+          errors = []
+          for path in skill_dirs:
+              with open(path) as fh:
+                  content = fh.read()
+              # Extract YAML frontmatter between --- delimiters
+              if not content.startswith('---'):
+                  errors.append(f"{path}: missing frontmatter (no leading ---)")
+                  continue
+              parts = content.split('---', 2)
+              if len(parts) < 3:
+                  errors.append(f"{path}: malformed frontmatter")
+                  continue
+              try:
+                  fm = yaml.safe_load(parts[1])
+                  assert 'name' in fm, "missing 'name'"
+                  assert 'description' in fm, "missing 'description'"
+                  print(f"  OK: {path} (name={fm['name']})")
+              except Exception as e:
+                  errors.append(f"{path}: {e}")
+
+          if errors:
+              print("\nSKILL.md errors:")
+              for e in errors:
+                  print(f"  FAIL: {e}")
+              sys.exit(1)
+          PYEOF
+
+  # ──────────────────────────────────────────────────────────────────────────
+  security-scan:
+    name: Security Scan (secret detection)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for gitleaks
+
+      - name: Install gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_linux_amd64.tar.gz \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Run gitleaks (detect committed secrets)
+        run: |
+          gitleaks detect \
+            --source . \
+            --no-git \
+            --exit-code 1 \
+            --redact \
+            2>&1 || {
+            echo ""
+            echo "ERROR: Potential secrets detected in repo files."
+            echo "Check the output above and remove/rotate any exposed credentials."
+            exit 1
+          }
+          echo "No secrets detected"

@@ -1,0 +1,18 @@
+TASK: 06 — create-Jake-vm.sh
+STATUS: COMPLETE — REQUIRES Proxmox access to run
+
+REQUIRED USER INPUT:
+1. Run this script ON the Proxmox host (or via SSH to it with qm in PATH)
+2. Ubuntu 24.04 cloud-init template must exist on Proxmox (see docs/deployment-guide.md)
+3. In config/.env:
+   - PROXMOX_TEMPLATE_ID — ID of your Ubuntu 24.04 template (e.g. 9000)
+   - PROXMOX_STORAGE     — storage pool name (e.g. local-lvm)
+
+4. Cloud-init user-data.yaml must have {{SSH_PUBLIC_KEY}} replaced (see Task 02 needs)
+
+COMMANDS NOTED IN-CODE (commented out, won't run without real Proxmox):
+- qm clone, qm set, qm resize, qm start — these are Proxmox CLI commands
+- pvesh get /cluster/nextid — Proxmox API call for next free VMID
+- All commands protected by --dry-run and confirmation prompts
+
+SAFETY: script will NOT run destructively without explicit --force flag

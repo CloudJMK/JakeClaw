@@ -1,0 +1,23 @@
+TASK: 12 — Packer template (optional)
+STATUS: COMPLETE — requires Proxmox access and Packer install to use
+
+REQUIRED USER INPUT:
+1. packer/jake.pkrvars.hcl (NOT committed — add to .gitignore):
+   proxmox_url          = "https://<your-proxmox>:8006/api2/json"
+   proxmox_token_id     = "root@pam!packer"
+   proxmox_token_secret = "<your-token-secret>"
+   ssh_public_key       = "<your-ssh-pub-key>"
+
+2. Packer + proxmox plugin installed on machine running the build:
+   packer plugins install github.com/hashicorp/proxmox
+
+3. Proxmox API token with VM create/modify permissions
+
+SECURITY REMINDERS:
+- NEVER commit jake.pkrvars.hcl (contains Proxmox token secret)
+- ANTHROPIC_API_KEY is NOT baked into the image (by design)
+- Keys injected at first VM boot via cloud-init or Doppler
+- cloud-init clean runs before templating to remove build identity
+
+ESTIMATED BUILD TIME: 15-25 minutes (Rust compilation dominates)
+RESULT: Template VMID 9001 in Proxmox, usable by create-Jake-vm.sh --template 9001

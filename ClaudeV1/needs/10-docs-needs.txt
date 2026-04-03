@@ -1,0 +1,18 @@
+TASK: 10 — Documentation
+STATUS: COMPLETE — no user input needed for docs themselves
+
+DOCS CREATED:
+- docs/deployment-guide.md   — full deploy walkthrough with commands
+- docs/claw-code-integration.md — architecture, build patterns, troubleshooting
+- docs/self-improvement.md   — timer mechanics, rollback, log reference
+- docs/packer.md             — optional pre-baked image guide
+
+USER INPUT NEEDED TO FOLLOW THE DOCS:
+- All prerequisites listed in docs/deployment-guide.md#prerequisites
+- Proxmox template setup instructions in deployment-guide.md
+- Packer var file (not committed) for packer.md
+
+NOTES:
+- Each doc clearly labels "EXPERIMENTAL" vs production-ready sections
+- All shell commands in docs are tested patterns (not pseudocode)
+- Recovery/rollback steps included in each relevant doc

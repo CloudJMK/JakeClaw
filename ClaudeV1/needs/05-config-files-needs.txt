@@ -1,0 +1,22 @@
+TASK: 05 — Configuration files
+STATUS: COMPLETE — REQUIRES user input before deploying
+
+REQUIRED USER INPUT:
+1. config/.env — copy from config/.env.example and fill in:
+   - ANTHROPIC_API_KEY (required for OpenClaw)
+   - PROXMOX_TEMPLATE_ID (required for create-Jake-vm.sh)
+   - PROXMOX_TOKEN_ID and PROXMOX_TOKEN_SECRET (required for Proxmox deploy)
+
+2. config/continue-config.yaml:
+   - Default apiBase: http://localhost:8000/v1 (works after setup-jake-api.sh)
+   - If using remote model, update apiBase and apiKey
+
+SECURITY NOTES:
+- config/.env is gitignored — NEVER commit it
+- openclaw-config.json does NOT contain the API key — it references the env var
+- continue-config.yaml uses jake-proxy-internal as apiKey — internal only, not a secret
+- Jake-identity.md is the system prompt — customize the persona as desired
+
+OPTIONAL:
+- openclaw-config.json permissions: adjust autoApprove settings per your comfort level
+- Jake-identity.md: customize Jake's communication style and safety rules
