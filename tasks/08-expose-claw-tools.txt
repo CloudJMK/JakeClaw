@@ -1,0 +1,20 @@
+TITLE: Add expose-claw-tools.sh to bridge Claw-code tools into OpenClaw skills
+
+CONTEXT:
+Generate dynamic OpenClaw SKILL.md wrappers from the Claw-code manifest so Rust tools appear as native skills.
+
+EXACT OUTPUTS:
+- scripts/expose-claw-tools.sh (queries `claw manifest`, generates skills/claw-tools-dynamic/*.md, reloads OpenClaw)
+- skills/claw-tools-dynamic/.gitkeep
+
+CONSTRAINTS & SAFETY:
+- Remove old dynamic skills before regeneration to avoid duplicates
+- If manifest unreachable, log and exit without reloading OpenClaw
+- Confirm reload action before executing
+
+VERIFICATION:
+- Run `claw manifest` and ensure skills are generated
+- curl POST to OpenClaw reload endpoint and confirm success
+
+COMMIT MESSAGE:
+"Added expose-claw-tools.sh to dynamically bridge Claw-code tools as OpenClaw skills"

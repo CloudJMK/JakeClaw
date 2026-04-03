@@ -1,0 +1,19 @@
+TITLE: Create deployment-guide.md, claw-code-integration.md, and self-improvement.md
+
+CONTEXT:
+Comprehensive docs covering prerequisites, quick start, manual deploy, customization, troubleshooting, and production hardening.
+
+EXACT OUTPUTS:
+- docs/deployment-guide.md (quick-start, Proxmox steps, example commands)
+- docs/claw-code-integration.md (how to expose Rust tools, build patterns)
+- docs/self-improvement.md (how the timer works, on-demand triggers, rollback)
+
+CONSTRAINTS & SAFETY:
+- Clearly label experimental vs production-ready sections
+- Include safe recovery steps and confirmation-gate guidance
+
+VERIFICATION:
+- markdownlint/docs validation and manual testing of quick-start commands
+
+COMMIT MESSAGE:
+"Added deployment guide, claw-code integration docs, and self-improvement guide"

@@ -1,0 +1,9 @@
+Needs for Task 05 (Configuration files):
+
+- Real API keys (OpenAI or provider) — do NOT commit these to the repo.
+- Confirmation of OpenClaw database location (default: /Jake-data/openclaw.db).
+- Continue.dev API base and credentials if different from the default.
+
+Notes:
+- Store secrets in a secrets manager (Doppler/Vault) or local .env outside the repo.
+- After providing keys, update config/.env.example -> .env locally (do not commit .env).

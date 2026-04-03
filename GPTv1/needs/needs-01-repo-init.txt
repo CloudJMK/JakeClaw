@@ -1,0 +1,10 @@
+Needs for Task 01 (Repo Init):
+
+- Confirm license choice (MIT vs AGPLv3).
+- Repository remote URL to set in docs (e.g., https://github.com/CloudJMK/JakeClaw.git).
+- Author name and contact for README.
+- If you want a release tag or pinned versions included, list them here.
+
+Notes:
+- No secrets required to create basic repo files.
+- After you confirm values, I can update README and license boilerplate accordingly.

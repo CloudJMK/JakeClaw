@@ -1,0 +1,8 @@
+Needs for Task 06 (create-Jake-vm.sh):
+
+- Proxmox access method: local `qm` CLI, or API token/host details (provide method and credentials separately, do NOT commit tokens).
+- Name of base cloud-init template in Proxmox (default placeholder: ubuntu-24-cloud-init-template).
+- Preferred storage pool for VM disk (e.g., local-zfs).
+
+Notes:
+- This script is a scaffold and uses `qm` commands; adapt for your Proxmox setup and test with --dry-run first.

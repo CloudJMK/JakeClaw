@@ -1,0 +1,21 @@
+TITLE: Create cloud-init templates for automated Ubuntu VM provisioning
+
+CONTEXT:
+Provide cloud-init user-data and network config to create the jake user, install base packages, and invoke the bootstrap script during first boot.
+
+EXACT OUTPUTS:
+- templates/cloud-init/user-data.yaml (creates jake user, placeholders for SSH key, packages, runcmd to /tmp/bootstrap-Jake.sh)
+- templates/cloud-init/network-config.yaml (DHCP + commented static example)
+- templates/cloud-init/README.md (instructions for injecting SSH key and customizing)
+
+CONSTRAINTS & SAFETY:
+- No hardcoded keys—use {{SSH_PUBLIC_KEY}} placeholders
+- YAML must be valid; runcmd uses fail-fast (-e)
+- Idempotent for re-run safety
+
+VERIFICATION:
+- YAML lint / manual validation
+- Confirm presence of placeholder SSH key string
+
+COMMIT MESSAGE:
+"Added cloud-init templates for automated Ubuntu provisioning (user-data, network-config)"

@@ -1,0 +1,8 @@
+Needs for Task 02 (Cloud-init templates):
+
+- SSH public key for `jake` (replace {{SSH_PUBLIC_KEY}} in user-data.yaml).
+- If you prefer a static IP, provide address/gateway/nameservers to uncomment in network-config.yaml.
+- Optionally: URL to a hosted bootstrap-Jake.sh (if you want cloud-init to fetch it rather than embedding a stub).
+
+Remarks:
+- Do NOT commit private keys. Keep SSH private key local to your machine.

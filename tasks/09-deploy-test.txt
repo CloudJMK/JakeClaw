@@ -1,0 +1,18 @@
+TITLE: Create deploy-test.sh to verify deployment health
+
+CONTEXT:
+Non-destructive smoke tests to validate user, mounts, services, versions, API endpoints, Continue.dev, and self-improvement timer.
+
+EXACT OUTPUTS:
+- scripts/deploy-test.sh (runs test suites and prints PASS/FAIL summary with exit code)
+
+CONSTRAINTS & SAFETY:
+- Read-only checks only; use sudo -n to avoid password prompts
+- Skip optional components gracefully
+
+VERIFICATION:
+- Run as jake user: bash scripts/deploy-test.sh and expect exit 0 on success
+- Inspect printed summary for failed suites
+
+COMMIT MESSAGE:
+"Added deploy-test.sh for comprehensive post-deployment verification"

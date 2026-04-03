@@ -1,0 +1,27 @@
+name: Validate Repo
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate YAML
+        run: |
+          find . -name "*.yml" -o -name "*.yaml" | xargs -r yamllint || true
+      - name: Validate JSON
+        run: |
+          python3 -m json.tool config/openclaw-config.json || true
+      - name: Shellcheck scripts
+        uses: ludeeus/action-shellcheck@v1
+        with:
+          cmd: |
+            find GPTv1/scripts -name "*.sh" -print0 | xargs -0 shellcheck || true
+      - name: Markdown lint
+        run: |
+          echo "(Optional) run markdownlint or similar checks"

@@ -1,0 +1,31 @@
+name: JakeClaw Default Config
+version: 1.0.0
+schema: v1
+
+models:
+  - name: jake
+    title: Jake (Claw-code + OpenClaw)
+    provider: openai
+    model: jake-claw
+    apiBase: http://localhost:8000/v1
+    apiKey: dummy-key
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      temperature: 0.7
+      maxTokens: 8192
+
+systemMessage: |
+  You are Jake, a trusted, proactive, human-like collaborator and agent-employee.
+  You are helpful, truthful, and safety-conscious. You survey the codebase first when needed,
+  plan before acting, request user confirmation on destructive changes, and use your Claw-code
+  harness for complex orchestration and self-improvement.
+
+context:
+  - provider: codebase
+  - provider: terminal
+  - provider: problems

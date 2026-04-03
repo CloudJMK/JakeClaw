@@ -1,0 +1,22 @@
+TITLE: Configure systemd timer and scripts for Jake's self-improvement loop
+
+CONTEXT:
+Install service+timer that periodically git pulls the JakeClaw repo, rebuilds Claw-code, and reloads skills; logs to /Jake-data/logs/.
+
+EXACT OUTPUTS:
+- scripts/setup-self-improvement.sh (installs service and timer)
+- /etc/systemd/system/jake-self-improve.service
+- /etc/systemd/system/jake-self-improve.timer
+- /usr/local/bin/jake-self-improve.sh (the worker script)
+
+CONSTRAINTS & SAFETY:
+- git pull only (no force resets); if local changes exist, skip and alert
+- Use flock to prevent concurrent runs
+- On build failure, revert to backup symlinked binary
+
+VERIFICATION:
+- systemctl status jake-self-improve.timer
+- sudo systemctl start jake-self-improve and inspect /Jake-data/logs/
+
+COMMIT MESSAGE:
+"Added systemd timer and scripts for Jake's self-improvement loop"

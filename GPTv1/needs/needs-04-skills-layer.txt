@@ -1,0 +1,8 @@
+Needs for Task 04 (Skills layer):
+
+- Confirm `claw` binary path (default /usr/local/bin/claw) or where to symlink it.
+- Confirm OpenClaw skills loader extraDirs (where to place generated skills) — default configured in config/openclaw-config.json.
+- If you want wrapper scripts executable by a specific user, confirm ownership and permissions.
+
+Notes:
+- Destructive commands must set `confirm_destructive=true` in skill parameters to require user confirmation.

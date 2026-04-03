@@ -1,0 +1,7 @@
+Needs for Task 09 (deploy-test.sh):
+
+- No secrets required to run deploy tests, but some checks assume services are installed and may be SKIPPED in dry-run.
+- If you want additional checks (OpenClaw health endpoints, specific skill counts), provide endpoint URLs or admin credentials.
+
+Notes:
+- Run as a privileged user to inspect services: `sudo bash scripts/deploy-test.sh`.

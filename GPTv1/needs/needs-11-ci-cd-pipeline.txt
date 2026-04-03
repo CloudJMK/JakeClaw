@@ -1,0 +1,7 @@
+Needs for Task 11 (CI/CD):
+
+- Do you want security scanning (gitleaks/trivy) added? If so, provide config preferences and any exceptions.
+- Any specific branches/PR policies to enforce beyond main?
+
+Notes:
+- CI skeleton is non-destructive and only validates files. Adjust tools and versions as you prefer.

@@ -1,0 +1,23 @@
+TITLE: Initialize JakeClaw repo with base structure, README, and LICENSE
+
+CONTEXT:
+Create the foundational JakeClaw repository structure as the single source of truth for reproducible Jake deployments.
+
+EXACT OUTPUTS:
+- .gitignore (Python, Node, Rust, IDE, build artifacts)
+- README.md (project overview, deployment quick-start, threat model)
+- LICENSE (AGPLv3 or MIT)
+- Folders: docs/, templates/cloud-init/, templates/proxmox/, scripts/, skills/, config/, claw-code/, packer/, ansible/
+- .github/ with CODEOWNERS and placeholder workflows
+
+CONSTRAINTS & SAFETY:
+- Idempotent: safe to run on an existing repo
+- Do NOT commit secrets; use config/.env.example only
+- Script files include set -e and non-interactive installs
+
+VERIFICATION:
+- git status shows files staged/committed
+- ls -R shows the created folder structure
+
+COMMIT MESSAGE:
+"Initialized JakeClaw repo with base structure, README, LICENSE, and .gitignore"

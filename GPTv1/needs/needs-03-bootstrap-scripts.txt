@@ -1,0 +1,10 @@
+Needs for Task 03 (Bootstrap & install scripts):
+
+- OpenClaw repo URL and preferred version/tag (if not default)
+- Claw-code repo URL (default set to ultraworkers/claw-code-parity)
+- Node.js desired major version (e.g., 24) and whether to use NodeSource
+- Confirm whether code-server should be enabled automatically and the service user
+- Any API keys (e.g., for model providers) should be stored outside the repo and referenced at runtime
+
+Notes:
+- System-level scripts may write to /etc and enable systemd units. Review before running.

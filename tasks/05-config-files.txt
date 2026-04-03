@@ -1,0 +1,21 @@
+TITLE: Add configuration templates: .env.example, openclaw-config.json, continue-config.yaml, Jake-identity.md
+
+CONTEXT:
+Provide templated configuration and Jake's system prompt; use placeholders for secrets and absolute paths referencing /Jake-data.
+
+EXACT OUTPUTS:
+- config/.env.example (placeholders for API keys and endpoints)
+- config/openclaw-config.json (skills.load.extraDirs includes /Jake-data/skills)
+- config/continue-config.yaml (model jake -> apiBase http://localhost:8000/v1)
+- config/Jake-identity.md (system prompt and safety rules)
+
+CONSTRAINTS & SAFETY:
+- No real secrets committed; mark placeholders clearly
+- Files readable by jake; sensitive owned 600 where appropriate
+
+VERIFICATION:
+- python3 -m json.tool config/openclaw-config.json
+- python3 -c "import yaml,sys; yaml.safe_load(open('config/continue-config.yaml'))"
+
+COMMIT MESSAGE:
+"Added configuration files (env template, OpenClaw config, Continue config, Jake identity)"

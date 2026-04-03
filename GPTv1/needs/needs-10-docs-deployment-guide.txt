@@ -1,0 +1,7 @@
+Needs for Task 10 (Docs):
+
+- Any site-specific details you want included in Quick Start (Proxmox host details, example IPs).
+- Preferred contact or support instructions for end-users.
+
+Notes:
+- Documentation is a draft; customize examples and any host-specific commands.

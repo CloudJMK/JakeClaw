@@ -1,0 +1,17 @@
+TITLE: Add GitHub Actions workflow to validate repo on push/PR
+
+CONTEXT:
+Create CI that validates scripts, YAML/JSON configs, and docs without performing any deployment.
+
+EXACT OUTPUTS:
+- .github/workflows/validate-repo.yml (jobs: validate-scripts, validate-docs, validate-configs, optional security-scan)
+
+CONSTRAINTS & SAFETY:
+- CI only runs validations (no deploys)
+- Fails on detected secrets or invalid config
+
+VERIFICATION:
+- Push a test commit with invalid YAML to see CI failure, then fix to see success
+
+COMMIT MESSAGE:
+"Added GitHub Actions CI/CD pipeline for repo validation"

@@ -1,0 +1,8 @@
+Needs for Task 07 (Self-Improvement timer):
+
+- Confirm whether `jake` user has passwordless sudo for systemctl operations (required for non-interactive triggers).
+- Confirm git remote name and default branch (e.g., origin/main).
+- Confirm rollback policy on build failures (e.g., keep last known-good release binary path).
+
+Notes:
+- The scaffold writes systemd unit files to /etc and a worker to /usr/local/bin. Review before enabling.

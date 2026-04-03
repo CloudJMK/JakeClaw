@@ -1,0 +1,7 @@
+Needs for Task 12 (Packer template):
+
+- Packer and Proxmox API credentials (do NOT commit tokens to repo). Use local secure storage.
+- Confirm target Proxmox storage pool and template naming conventions.
+
+Notes:
+- Packer build can take time; run in a controlled environment.

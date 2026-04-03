@@ -1,0 +1,21 @@
+TITLE: Add OpenClaw skills: claw_harness and self_improvement
+
+CONTEXT:
+Provide two SKILL definitions: one to bridge to the Claw-code Rust CLI and one meta-skill for Jake's self-improvement requests.
+
+EXACT OUTPUTS:
+- skills/claw-harness/SKILL.md (name: claw_harness; params: command, args, project_path, confirm_destructive)
+- skills/claw-harness/tools/wrap-claw.sh (simple wrapper for /usr/local/bin/claw)
+- skills/self-improvement/SKILL.md (name: self_improvement; request_type enum, description)
+
+CONSTRAINTS & SAFETY:
+- Mark destructive commands with confirm_destructive=true and require user confirmation
+- Log all skill invocations to /Jake-data/logs/
+- Idempotent: repeated builds do not corrupt state
+
+VERIFICATION:
+- Validate SKILL.md frontmatter YAML
+- Call claw manifest and dry-run claw_harness with command=manifest
+
+COMMIT MESSAGE:
+"Added claw-harness and self-improvement skills for orchestration and capability growth"

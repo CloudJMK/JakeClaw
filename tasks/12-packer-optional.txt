@@ -1,0 +1,19 @@
+TITLE: [OPTIONAL] Add Packer template for pre-baked Proxmox image
+
+CONTEXT:
+Provide an optional packer/proxmox-ubuntu-jake.pkr.hcl that builds a pre-baked Ubuntu image with Jake installed, reducing deployment time.
+
+EXACT OUTPUTS:
+- packer/proxmox-ubuntu-jake.pkr.hcl (build config)
+- docs/packer.md (how to run packer and upload template to Proxmox)
+
+CONSTRAINTS & SAFETY:
+- Do NOT bake secrets into images
+- Requires controlled environment and Packer credentials to Proxmox
+
+VERIFICATION:
+- packer validate proxmox-ubuntu-jake.pkr.hcl
+- test packer build in a sandbox and verify template in Proxmox UI
+
+COMMIT MESSAGE:
+"[OPTIONAL] Added Packer template for pre-baked JakeClaw Proxmox images"

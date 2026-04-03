@@ -1,0 +1,39 @@
+#cloud-config
+
+users:
+  - default
+  - name: jake
+    gecos: Jake Agent
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: [sudo]
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - "{{SSH_PUBLIC_KEY}}"  # TODO: Replace with actual public key
+
+package_update: true
+package_upgrade: true
+packages:
+  - git
+  - build-essential
+  - curl
+  - wget
+  - ca-certificates
+  - openssh-server
+  - htop
+  - python3
+  - python3-venv
+
+runcmd:
+  - [ bash, -lc, 'echo "Running bootstrap (placeholder)" | tee /var/log/jake-bootstrap.log' ]
+  - [ bash, -lc, 'if [ -f /tmp/bootstrap-Jake.sh ]; then bash /tmp/bootstrap-Jake.sh || true; fi' ]
+
+# write_files can include an embedded bootstrap stub; prefer fetching from repo in production
+write_files:
+  - path: /tmp/bootstrap-Jake.sh
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      echo "Placeholder bootstrap script. Replace or fetch real bootstrap-Jake.sh from your repo."
+
+# NOTE: Replace {{SSH_PUBLIC_KEY}} before use. This cloud-config is a template and intentionally conservative.

@@ -1,0 +1,19 @@
+TITLE: Create create-Jake-vm.sh for one-command Proxmox deployment
+
+CONTEXT:
+Shell helper that clones a prepared Ubuntu cloud-init template on Proxmox, injects cloud-init, adds /Jake-data disk, and starts the VM.
+
+EXACT OUTPUTS:
+- templates/proxmox/create-Jake-vm.sh (executable CLI wrapper with args: --name, --memory, --cores, --ip, --storage, --force)
+
+CONSTRAINTS & SAFETY:
+- Confirmation prompt before VM creation unless --force
+- If VM name exists, warn and exit unless --force
+- No destructive host changes; operate via Proxmox API/CLI only
+
+VERIFICATION:
+- Run with --dry-run to print qm commands
+- After deploy: ssh jake@<IP> and run deploy-test.sh
+
+COMMIT MESSAGE:
+"Added create-Jake-vm.sh for one-command Proxmox deployment"

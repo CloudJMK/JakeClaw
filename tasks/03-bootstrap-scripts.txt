@@ -1,0 +1,28 @@
+TITLE: Create bootstrap-Jake.sh and modular install-*.sh scripts
+
+CONTEXT:
+Post-cloud-init orchestrator to install OpenClaw, Claw-code, dev tools, code-server, Continue.dev, and the API wrapper. Scripts must be idempotent and log to /var/log/jake-bootstrap.log.
+
+EXACT OUTPUTS:
+- scripts/bootstrap-Jake.sh (calls install scripts, sets JAKE_USER and JAKE_HOME, logs)
+- scripts/install-openclaw.sh
+- scripts/install-claw-code.sh
+- scripts/install-dev-env.sh
+- scripts/install-code-server.sh
+- scripts/install-continue-dev.sh
+- scripts/setup-jake-api.sh
+
+CONSTRAINTS & SAFETY:
+- Non-interactive; use apt-get -y / flags
+- Assert EUID==0 early or exit
+- Idempotent: check for existing installs before re-running
+- Confirmation required before changing system-critical files unless --force
+
+VERIFICATION:
+- openclaw --version
+- claw --version
+- code-server --version
+- curl http://localhost:8000/v1/models
+
+COMMIT MESSAGE:
+"Added bootstrap and installation scripts (OpenClaw, Claw-code, dev tools, Continue, API wrapper)"
