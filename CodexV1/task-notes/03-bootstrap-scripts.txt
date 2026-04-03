@@ -1,0 +1,10 @@
+Task 03 bootstrap scripts
+
+Inputs still needed:
+- Real OpenClaw repository URL and branch/ref.
+- Real Claw-code repository URL and branch/ref.
+- Confirm whether code-server should use password auth, proxy auth, or SSO.
+- Confirm whether Docker, Chromium, and Playwright should stay enabled by default.
+
+Implementation note:
+- Scripts are written to skip installs safely when required repo details are missing instead of failing the whole build permanently.

@@ -1,0 +1,6 @@
+Task 07 self-improvement timer
+
+Inputs still needed:
+- Final repo remote and branch Jake should track.
+- Desired timer cadence if hourly is too aggressive.
+- Confirm the acceptable rollback behavior for failed Claw binary rebuilds.

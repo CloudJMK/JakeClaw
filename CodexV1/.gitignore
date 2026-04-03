@@ -1,0 +1,54 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Rust
+target/
+Cargo.lock
+
+# Build outputs
+build/
+dist/
+coverage/
+tmp/
+logs/
+*.log
+
+# Environment and secrets
+.env
+.env.local
+config/.env
+config/*.secret
+
+# Terraform / Packer artifacts
+*.box
+*.qcow2
+*.img
+.packer.d/
+packer_cache/
+
+# Misc
+*.bak
+*.orig

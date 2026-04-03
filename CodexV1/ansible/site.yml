@@ -1,0 +1,10 @@
+---
+- name: JakeClaw post-deploy placeholder
+  hosts: all
+  become: true
+  tasks:
+    - name: Explain current intent
+      ansible.builtin.debug:
+        msg: >-
+          JakeClaw CodexV1 currently relies on cloud-init plus shell scripts.
+          Extend this playbook if you want an Ansible-based post-config layer.

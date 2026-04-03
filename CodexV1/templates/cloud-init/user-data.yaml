@@ -1,0 +1,67 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+users:
+  - default
+  - name: jake
+    gecos: Jake Operator
+    shell: /bin/bash
+    groups:
+      - sudo
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+      - "{{SSH_PUBLIC_KEY}}" # REQUIRED INPUT: replace with a real public key.
+
+packages:
+  - git
+  - curl
+  - wget
+  - jq
+  - ca-certificates
+  - gnupg
+  - software-properties-common
+  - build-essential
+  - python3
+  - python3-pip
+  - python3-venv
+  - rsync
+  - unzip
+
+write_files:
+  - path: /tmp/bootstrap-Jake.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      REPO_URL="{{JAKE_REPO_URL}}"   # REQUIRED INPUT: point to your real JakeClaw repo.
+      REPO_REF="{{JAKE_REPO_REF}}"   # REQUIRED INPUT: branch, tag, or commit to deploy.
+      INSTALL_ROOT="/opt/JakeClaw"
+
+      if [[ "${REPO_URL}" == "{{JAKE_REPO_URL}}" ]]; then
+        echo "JAKE_REPO_URL placeholder is still set. Aborting bootstrap."
+        exit 1
+      fi
+
+      apt-get update -y
+      apt-get install -y git
+
+      rm -rf "${INSTALL_ROOT}"
+      git clone "${REPO_URL}" "${INSTALL_ROOT}"
+      cd "${INSTALL_ROOT}"
+
+      if [[ "${REPO_REF}" != "{{JAKE_REPO_REF}}" ]]; then
+        git fetch --all --tags
+        git checkout "${REPO_REF}"
+      fi
+
+      chmod +x scripts/bootstrap-Jake.sh
+      /bin/bash scripts/bootstrap-Jake.sh --force
+
+runcmd:
+  - [bash, -lc, "/tmp/bootstrap-Jake.sh > /var/log/jake-cloud-init-bootstrap.log 2>&1"]
+
+final_message: "JakeClaw cloud-init finished. Review /var/log/jake-cloud-init-bootstrap.log."

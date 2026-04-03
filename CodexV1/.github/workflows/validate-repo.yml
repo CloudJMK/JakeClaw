@@ -1,0 +1,63 @@
+name: Validate Repo
+
+on:
+  push:
+    paths:
+      - "CodexV1/**"
+  pull_request:
+    paths:
+      - "CodexV1/**"
+
+jobs:
+  validate-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Bash syntax check
+        run: |
+          find CodexV1/scripts CodexV1/templates/proxmox -type f -name '*.sh' -print0 | \
+            xargs -0 -I{} bash -n "{}"
+      - name: Shellcheck
+        run: |
+          find CodexV1/scripts CodexV1/templates/proxmox -type f -name '*.sh' -print0 | \
+            xargs -0 shellcheck
+
+  validate-configs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python deps
+        run: python -m pip install --upgrade pip pyyaml
+      - name: Validate JSON and YAML
+        run: |
+          python -m json.tool CodexV1/config/openclaw-config.json > /dev/null
+          python - <<'PY'
+          import pathlib
+          import yaml
+
+          for path in pathlib.Path("CodexV1").rglob("*.yaml"):
+              with path.open("r", encoding="utf-8") as handle:
+                  yaml.safe_load(handle)
+          PY
+
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate markdown presence
+        run: |
+          test -f CodexV1/README.md
+          test -f CodexV1/docs/deployment-guide.md
+          test -f CodexV1/docs/claw-code-integration.md
+          test -f CodexV1/docs/self-improvement.md
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install detect-secrets
+        run: python -m pip install --upgrade pip detect-secrets
+      - name: Scan for secrets
+        run: detect-secrets scan CodexV1 --all-files

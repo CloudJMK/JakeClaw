@@ -1,0 +1,6 @@
+Task 02 cloud-init templates
+
+Inputs still needed:
+- Replace {{SSH_PUBLIC_KEY}} with a real key.
+- Replace {{JAKE_REPO_URL}} and {{JAKE_REPO_REF}} with the deployment repo location and branch/tag.
+- Decide whether the VM will stay on DHCP or use a static address block.

@@ -1,0 +1,6 @@
+Task 04 skills layer
+
+Inputs still needed:
+- Confirm the actual Claw manifest JSON shape if it differs from the assumed tools array schema.
+- Confirm the final destructive-command policy that should map to confirm_destructive.
+- Confirm whether /Jake-data/logs/skills is the preferred persistent log path.

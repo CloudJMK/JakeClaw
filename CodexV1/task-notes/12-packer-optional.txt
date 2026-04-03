@@ -1,0 +1,6 @@
+Task 12 optional packer
+
+Inputs still needed:
+- Proxmox API URL, node, storage, token ID, and token secret.
+- Final Ubuntu ISO location in the Proxmox datastore.
+- SSH private key path for Packer to use during provisioning.

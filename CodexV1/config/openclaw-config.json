@@ -1,0 +1,33 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000
+  },
+  "auth": {
+    "mode": "local",
+    "adminTokenEnv": "OPENCLAW_RELOAD_TOKEN"
+  },
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/opt/JakeClaw/skills",
+        "/Jake-data/skills"
+      ]
+    }
+  },
+  "workspace": {
+    "defaultPath": "/Jake-data/workspace"
+  },
+  "logging": {
+    "level": "info",
+    "directory": "/Jake-data/logs/openclaw"
+  },
+  "safety": {
+    "requireConfirmationFor": [
+      "rm",
+      "git reset",
+      "systemctl stop",
+      "systemctl disable"
+    ]
+  }
+}

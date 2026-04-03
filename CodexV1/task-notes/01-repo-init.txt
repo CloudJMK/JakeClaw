@@ -1,0 +1,8 @@
+Task 01 repo-init
+
+Status:
+- Implemented in CodexV1 with README, LICENSE, gitignore, base folders, CODEOWNERS, workflow, and placeholder ansible/claw-code content.
+
+Inputs still needed:
+- Confirm final license preference if MIT is not desired.
+- Confirm the long-term GitHub owner to keep CODEOWNERS accurate.

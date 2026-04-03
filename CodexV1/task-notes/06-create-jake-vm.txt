@@ -1,0 +1,7 @@
+Task 06 create-jake-vm
+
+Inputs still needed:
+- Proxmox template VMID to clone.
+- Storage target name.
+- SSH key path on the Proxmox host.
+- Bridge and gateway values if static networking is required.

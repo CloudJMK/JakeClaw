@@ -1,0 +1,6 @@
+Task 11 CI/CD pipeline
+
+Inputs still needed:
+- Confirm whether GitHub Actions is the intended CI platform.
+- Confirm whether detect-secrets should run against the entire repo or only CodexV1.
+- Add any org-specific policy checks or license checks if required.

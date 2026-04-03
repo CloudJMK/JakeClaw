@@ -1,0 +1,7 @@
+Task 05 config files
+
+Inputs still needed:
+- Real API keys or secret-injection mechanism for OpenAI, Anthropic, OpenRouter, or other providers.
+- Actual OpenClaw reload endpoint and admin token.
+- Real code-server password or external auth strategy.
+- Confirm whether /Jake-data/config is the final persistent config path.

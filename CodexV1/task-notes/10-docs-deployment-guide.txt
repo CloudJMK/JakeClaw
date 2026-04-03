@@ -1,0 +1,5 @@
+Task 10 docs
+
+Inputs still needed:
+- Final public/private deployment positioning for the docs.
+- Any production hardening requirements that should be elevated from "ideas" into baseline guidance.

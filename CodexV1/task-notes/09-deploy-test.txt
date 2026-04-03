@@ -1,0 +1,5 @@
+Task 09 deploy-test
+
+Inputs still needed:
+- Final service names if they differ from openclaw, claw-code, jake-api, or jake-self-improve.
+- Any extra health endpoints you want covered in smoke tests.

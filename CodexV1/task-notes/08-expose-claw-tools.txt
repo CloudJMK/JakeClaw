@@ -1,0 +1,6 @@
+Task 08 expose claw tools
+
+Inputs still needed:
+- Actual OpenClaw reload URL and token.
+- Confirmation that claw supports `manifest --format json`.
+- Any tool names or categories that should be filtered out from generated skills.
