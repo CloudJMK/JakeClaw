@@ -1,0 +1,23 @@
+# Secrets — never commit
+.env
+*.env
+*.secret
+
+# Auto-generated skill files (rebuilt at deploy time)
+skills/claw-tools-dynamic/*/SKILL.md
+
+# Build artifacts
+packer/packer_cache/
+packer/*.box
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.swp
+*~

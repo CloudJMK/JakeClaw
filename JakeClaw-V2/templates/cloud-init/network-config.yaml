@@ -1,0 +1,22 @@
+# cloud-init network-config (Netplan v2)
+# Applied on first boot. DHCP is the default — see static config below.
+
+version: 2
+ethernets:
+  eth0:
+    dhcp4: true
+    dhcp6: false
+    optional: true
+
+# ---------------------------------------------------------------------------
+# Static IP example (uncomment and fill in to use)
+# ---------------------------------------------------------------------------
+# ethernets:
+#   eth0:
+#     dhcp4: false
+#     dhcp6: false
+#     addresses:
+#       - 192.168.1.50/24
+#     gateway4: 192.168.1.1
+#     nameservers:
+#       addresses: [1.1.1.1, 8.8.8.8]

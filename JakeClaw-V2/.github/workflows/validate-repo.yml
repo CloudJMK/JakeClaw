@@ -1,0 +1,53 @@
+name: Validate Repo
+
+on:
+  push:
+    branches: [main, jake-gpt5mini-v1-draft]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck on all scripts
+        run: |
+          find JakeClaw-V2/scripts JakeClaw-V2/templates/proxmox \
+               JakeClaw-V2/skills -name "*.sh" \
+          | xargs shellcheck --severity=warning
+
+  yamllint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint cloud-init templates
+        run: |
+          yamllint -d relaxed \
+            JakeClaw-V2/templates/cloud-init/user-data.yaml \
+            JakeClaw-V2/templates/cloud-init/network-config.yaml \
+            JakeClaw-V2/config/continue-config.yaml \
+            JakeClaw-V2/ansible/site.yml
+
+  json-validate:
+    name: JSON Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON config files
+        run: |
+          for f in $(find JakeClaw-V2 -name "*.json"); do
+            echo "Checking $f"
+            python3 -m json.tool "$f" > /dev/null
+          done

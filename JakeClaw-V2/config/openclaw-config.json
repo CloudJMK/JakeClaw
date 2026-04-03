@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/settings.schema.json",
+
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000,
+    "auth": {
+      "mode": "local",
+      "adminTokenEnv": "OPENCLAW_RELOAD_TOKEN"
+    }
+  },
+
+  "model": "claude-sonnet-4-6",
+
+  "systemPrompt": {
+    "file": "/JakeClaw/config/Jake-identity.md"
+  },
+
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/JakeClaw/skills",
+        "/Jake-data/skills"
+      ]
+    }
+  },
+
+  "workspace": {
+    "defaultPath": "/Jake-data/workspace"
+  },
+
+  "permissions": {
+    "allow": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebSearch", "WebFetch", "TodoWrite", "Agent"]
+  },
+
+  "autoApprove": {
+    "read": true,
+    "write": false,
+    "bash": false,
+    "destructive": false
+  },
+
+  "safety": {
+    "requireConfirmationFor": [
+      "rm",
+      "git reset",
+      "git push --force",
+      "systemctl stop",
+      "systemctl disable",
+      "chmod 777",
+      "mkfs"
+    ]
+  },
+
+  "logging": {
+    "level": "info",
+    "directory": "/Jake-data/logs/openclaw"
+  },
+
+  "memory": {
+    "backend": "sqlite",
+    "path": "/Jake-data/openclaw.db"
+  }
+}

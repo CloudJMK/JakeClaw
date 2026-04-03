@@ -1,0 +1,50 @@
+---
+# JakeClaw-V2 Ansible playbook — optional post-bootstrap configuration
+# Use this for fleet management or reproducible post-install state.
+# For a single VM, bootstrap-Jake.sh is sufficient.
+#
+# Usage: ansible-playbook -i <VM-IP>, -u jake site.yml
+
+- name: Configure Jake VM
+  hosts: all
+  become: true
+  vars_files:
+    - vars.yml   # Optional — create from .env values if desired
+
+  tasks:
+    - name: Ensure JakeClaw repo is up to date
+      git:
+        repo: "{{ jakeclaw_repo | default('https://github.com/CloudJMK/JakeClaw') }}"
+        dest: /JakeClaw
+        version: main
+        force: false
+        update: true
+
+    - name: Ensure /Jake-data directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: jake
+        group: jake
+        mode: "0755"
+      loop:
+        - /Jake-data
+        - /Jake-data/logs
+        - /Jake-data/skills
+        - /Jake-data/workspace
+        - /Jake-data/.continue
+
+    - name: Ensure self-improvement timer is enabled
+      systemd:
+        name: jake-self-improve.timer
+        enabled: true
+        state: started
+
+    - name: Ensure all Jake services are running
+      systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - jake-api.service
+        - claw-code.service

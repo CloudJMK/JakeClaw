@@ -1,0 +1,53 @@
+# Continue.dev configuration for Jake
+# Docs: https://docs.continue.dev/reference/config
+# This file is symlinked from ~/.continue/config.yaml by bootstrap-Jake.sh
+
+models:
+  # Primary model — routed through LiteLLM on port 8000
+  - name: jake
+    provider: openai
+    model: ${JAKE_MODEL_NAME:-claude-sonnet-4-6}
+    apiBase: http://localhost:8000/v1
+    apiKey: ${JAKE_API_KEY:-jake-api-secret}
+    temperature: 0.3
+    maxTokens: 8192
+    systemMessage: "You are Jake. Follow the identity in /JakeClaw/config/Jake-identity.md."
+    roles:
+      - chat
+      - edit
+
+  # Autocomplete model (lower temperature for completions)
+  - name: jake-autocomplete
+    provider: openai
+    model: ${JAKE_MODEL_NAME:-claude-sonnet-4-6}
+    apiBase: http://localhost:8000/v1
+    apiKey: ${JAKE_API_KEY:-jake-api-secret}
+    temperature: 0.1
+    maxTokens: 512
+    roles:
+      - autocomplete
+
+  # Optional: Ollama local fallback (enable by setting OLLAMA_BASE_URL)
+  # - name: ollama-local
+  #   provider: ollama
+  #   model: AUTODETECT
+  #   apiBase: http://localhost:11434
+  #   roles:
+  #     - chat
+
+tabAutocompleteModel: jake-autocomplete
+
+contextProviders:
+  - name: codebase
+  - name: diff
+  - name: terminal
+  - name: problems
+  - name: docs
+
+rules:
+  - Survey files before modifying them
+  - Ask for confirmation before destructive operations
+  - Keep responses concise — no preamble or trailing summaries
+
+privacy:
+  allowAnonymousTelemetry: false
